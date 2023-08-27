@@ -14,7 +14,7 @@ This is a simple PHP + MySQL tool that queries this dataset. It has two function
 
 *(Results of submitting that form)*
 
-![Screenshot of resulting table](result.jpg)
+![Screenshot of resulting table](result2.jpg)
 
 The form at index.php generates a GET request, which means that every search creates a unique URL for the cbp_data_table.php page, making it easy to share a table.
 
