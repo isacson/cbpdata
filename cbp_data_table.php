@@ -353,6 +353,9 @@ echo "</tr>";
 // And that's it. Close the <table> and the entire page.
 ?>
 		</table>
+		<p>
+			<a href="/cbpdata/">Back to the search form</a>
+		</p>
 	</body>
 </html>
 
