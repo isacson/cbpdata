@@ -8,13 +8,13 @@ This is a simple PHP + MySQL tool that queries this dataset. It has two function
   - any optional criteria they want to specify—like “show me Venezuelan family-unit members subjected to Title 42 in the Tucson Sector.” (The total is “632,” incidentally.)
 - cbp_data_table.php, the page that generates the table. The page’s title changes to reflect what the user chose to display. A button lets the user instantly select the table, so they can work on it elsewhere, like a spreadsheet app.
 
+*(Form showing a search for, by year, how many Venezuelan family-unit members and unaccompanied children came to ports of entry, or between ports of entry, in Border Patrol's El Paso Sector and CBP's El Paso Field Office)*
+
 ![Screenshot of form showing selections: "Year," "At Ports of Entry or Between Them," "El Paso Sector," "El Paso Field Office," "Venezuela," "Family Unit Members," "Unaccompanied Children"](form.jpg)
 
-(Form showing a search for, by year, how many Venezuelan family-unit members and unaccompanied children came to ports of entry, or between ports of entry, in Border Patrol's El Paso Sector and CBP's El Paso Field Office)
+*(Results of submitting that form)*
 
 ![Screenshot of resulting table](result.jpg)
-
-(Results of submitting that form)
 
 The form at index.php generates a GET request, which means that every search creates a unique URL for the cbp_data_table.php page, making it easy to share a table.
 
@@ -48,10 +48,10 @@ Then navigate your browser to http://localhost:8888/, adding to the URL the name
 [WAMP]: https://www.wampserver.com/en/
 [LAMP]: https://www.redhat.com/sysadmin/lamp-server
 
+*(Form showing a search for, by month and nationality, how many migrants were encountered in Border Patrol's Yuma Sector)*
+
 ![Screenshot of form showing selections: "Month," "Nationality," and "Yuma Sector"](yuma_form.jpg)
 
-(Form showing a search for, by month and nationality, how many migrants were encountered in Border Patrol's Yuma Sector)
+*(Results of submitting that form)*
 
 ![Screenshot of resulting table](yuma_result.jpg)
-
-(Results of submitting that form)
