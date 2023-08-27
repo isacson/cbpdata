@@ -62,7 +62,11 @@
 		// This sends variables to the "title_gen" function, which creates the text that will appear at the top of the page to tell the user what the table is displaying. Those variables are the array of sectors selected (based on checked boxes); the maximum number of sectors (9), so that if someone checks all 9 it says "all Border Patrol sectors" instead of listing all of them; the text to show if the user checked all boxes; the text to show before showing a list of sectors; and the preposition that goes before, like "*at* Border Patrol Laredo Sector and Rio Grande Valley Sector"
 		$title_bp_sectors = title_gen($bp_sectors, 9, "Border Patrol sectors", "Border Patrol", "at");
 		// Adding to the query's WHERE statement a list of the selected sectors, separated by "OR" and in parentheses
-		$query_where .= " AND (area_of_responsibility = '" . implode("' OR area_of_responsibility = '", $bp_sectors) . "') ";
+		$query_where .= " AND ";
+		if (isset($_GET["field_offices"]) && $_GET["field_offices"] != "") {
+			$query_where .= "(";
+		}
+		$query_where .= " (area_of_responsibility = '" . implode("' OR area_of_responsibility = '", $bp_sectors) . "') ";
 	}
 
 	// Which CBP field offices, if any, did the user choose?
@@ -71,6 +75,9 @@
 		$title_field_offices = title_gen($field_offices, 4, "CBP Field Offices", "CBP", "at");
 		// Field offices should be "OR," not "AND," because they can be in addition to Border Patrol sectors
 		$query_where .= " OR (area_of_responsibility = '" . implode("' OR area_of_responsibility = '", $field_offices) . "') ";
+		if (isset($_GET["bp_sectors"]) && $_GET["bp_sectors"] != "") {
+			$query_where .= ")";
+		}
 	}
 
 	// Which nationalities, if any, did the user choose?
