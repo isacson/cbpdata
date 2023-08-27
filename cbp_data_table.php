@@ -69,7 +69,8 @@
 	if (isset($_GET["field_offices"]) && $_GET["field_offices"] != "") {
 		$field_offices = $_GET["field_offices"];
 		$title_field_offices = title_gen($field_offices, 4, "CBP Field Offices", "CBP", "at");
-		$query_where .= " AND (area_of_responsibility = '" . implode("' OR area_of_responsibility = '", $field_offices) . "') ";
+		// Field offices should be "OR," not "AND," because they can be in addition to Border Patrol sectors
+		$query_where .= " OR (area_of_responsibility = '" . implode("' OR area_of_responsibility = '", $field_offices) . "') ";
 	}
 
 	// Which nationalities, if any, did the user choose?

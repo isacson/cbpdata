@@ -8,6 +8,14 @@ This is a simple PHP + MySQL tool that queries this dataset. It has two function
   - any optional criteria they want to specify—like “show me Venezuelan family-unit members subjected to Title 42 in the Tucson Sector.” (The total is “632,” incidentally.)
 - cbp_data_table.php, the page that generates the table. The page’s title changes to reflect what the user chose to display. A button lets the user instantly select the table, so they can work on it elsewhere, like a spreadsheet app.
 
+![Screenshot of form showing selections: "Year," "At Ports of Entry or Between Them," "El Paso Sector," "El Paso Field Office," "Venezuela," "Family Unit Members," "Unaccompanied Children"](form.jpg)
+
+(Form showing a search for, by year, how many Venezuelan family-unit members and unaccompanied children came to ports of entry, or between ports of entry, in Border Patrol's El Paso Sector and CBP's El Paso Field Office)
+
+![Screenshot of resulting table](result.jpg)
+
+(Results of submitting that form)
+
 The form at index.php generates a GET request, which means that every search creates a unique URL for the cbp_data_table.php page, making it easy to share a table.
 
 There are two other files:
@@ -27,9 +35,9 @@ But most of the time, I just run it on my own computer, unconnected to the inter
 - [WAMP][WAMP] (for Windows)
 - [LAMP][LAMP] (for Linux)
 
-On MAMP at least, once MAMP is running, go to http://localhost:8888/phpMyAdmin/, create a database, call it “cbp_data,” then import the data.sql file into it.
+On MAMP at least, once MAMP is running, create a database, call it “cbp_data,” go to http://localhost:8888/phpMyAdmin/ and import the data.sql file into cbp_data.
 
-MAMP, which I use, uses a folder called “htdocs,” inside the /MAMP folder in your /Applications folder. Copy all 3 php files in this repository into that folder (or a subfolder that you make, if you prefer).
+MAMP, which I use, uses a folder called “htdocs,” inside the /MAMP folder in your /Applications folder. Copy all 3 of this repository's php files in into that folder (or a subfolder that you make, if you prefer).
 
 If that worked, then change your credentials in the “functions-git.php” file (in a comment there, I’ve included the credentials that work for me in MAMP), and rename it “functions.php.”
 
@@ -39,3 +47,11 @@ Then navigate your browser to http://localhost:8888/, adding to the URL the name
 [MAMP]: https://www.mamp.info/en/mac/
 [WAMP]: https://www.wampserver.com/en/
 [LAMP]: https://www.redhat.com/sysadmin/lamp-server
+
+![Screenshot of form showing selections: "Month," "Nationality," and "Yuma Sector"](yuma_form.jpg)
+
+(Form showing a search for, by month and nationality, how many migrants were encountered in Border Patrol's Yuma Sector)
+
+![Screenshot of resulting table](yuma_result.jpg)
+
+(Results of submitting that form)

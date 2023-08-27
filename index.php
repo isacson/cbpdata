@@ -5,14 +5,30 @@
 		<title>
 			Make a Table from CBP's Migration Data
 		</title>
+		<!--There's no separate stylesheet, just this inline bit. Feel free to change any of this.-->
 		<style>
-			body {font-family: "Avenir Next", Merriweather, Verdana;}
-			fieldset {width: 80%; margin-left: 5%;}
-			.submitbutton {font-weight:bold; width:40%; margin-left: 25%; background-color: #4B3C3D; color: white; font-family: "Avenir Next", Merriweather, Verdana; padding: 0.25em; font-size: 1em; border-radius: 8px;}
-			button {font-family: "Avenir Next", Merriweather, Verdana;}
+			body {
+				font-family: "Avenir Next", Merriweather, Verdana;
+				margin-left: 5%;
+			}
+			fieldset {
+				width: 80%; 
+			}
+			.submitbutton {
+				font-weight:bold; width:40%; margin-left: 20%; background-color: #797979; color: white; font-family: "Avenir Next", Merriweather, Verdana; padding: 0.25em; font-size: 1em; border-radius: 8px;
+			}
+			button {
+				font-family: "Avenir Next", Merriweather, Verdana; margin-bottom: 0.25em;
+			}
+			label {
+				white-space:nowrap;
+			}
 		</style>
+
+		<!--The JavaScripts here: (1) select /de-select all the checkboxes in a section, by their "name" attribute. (This comes from the javaTpoint website: https://www.javatpoint.com/how-to-select-all-checkboxes-using-javascript) clearForm() restores the form to its default state. It comes from a 2018 StackOverflow response at https://stackoverflow.com/questions/2279760/how-to-reset-all-checkboxes-using-jquery-or-pure-js-->
 		<script type="text/javascript">  
-			function selectCheck(selectName){  
+
+			function selectCheck(selectName) {  
 				var ele=document.getElementsByName(selectName);  
 				for(var i=0; i<ele.length; i++) {
 					if(ele[i].type=='checkbox')  
@@ -20,15 +36,15 @@
 				}  
 			}  
 
-			function deSelectCheck(selectName){  
+			function deSelectCheck(selectName) {  
 				var ele=document.getElementsByName(selectName);  
 				for(var i=0; i<ele.length; i++) {  
 					if(ele[i].type=='checkbox')  
-						ele[i].checked=false;				  
+						ele[i].checked=false;
 				}  
 			}
 
-			function clearForm(){
+			function clearForm() {
 				var clist = document.getElementsByTagName("input");
 				for (var i = 0; i < clist.length; ++i) {
 					if(clist[i].type == "checkbox") {
@@ -45,18 +61,21 @@
 				document.getElementById("by_title"). checked = false;
 				document.getElementById("by_nothing"). checked = false;				
 			}
+			
         </script>
 	</head>
 	<body>
-		<h2 style="color: #797979;">
+		<h2 style="color:white; background-color: #797979; width: 80%; padding: 0 15px 0 15px;" align="center">
 			This form will make a table using CBP&rsquo;s migration data since Fiscal Year 2020
 		</h2>
 		
+		<!--The form uses the "get" method so that the page with the resulting table will have a unique URL.-->
 		<form id="theForm" action="cbp_data_table.php" method="get">
 		
 			<h3>
 				1. The table&rsquo;s columns:
 			</h3>
+
 				<fieldset>
 				<legend><strong>Show a table of migration data by</strong></legend>
 					<input type="radio" id="months" name="time_period" value="months" checked><label for="months">Month</label>
@@ -66,21 +85,19 @@
 			<h3 style="color: #5BA8C8;">
 				2. The table&rsquo;s rows:
 			</h3>
+
 			<fieldset>
 				<legend><strong>Display migration data according to</strong></legend>
-				<p>
 					<input type="radio" id="by_nationality" name="organized_by" value="by_nationality" checked><label for="by_nationality"><strong>Nationality</strong></label>
-					<input type="radio" id="by_demographic" name="organized_by" value="by_demographic"> 
-						<label for="by_demographic"><strong>Demographic Category</strong> (single adult, family, unaccompanied child)</label>
+					<label for="by_demographic"><input type="radio" id="by_demographic" name="organized_by" value="by_demographic"><strong>Demographic Category</strong> (single adult, family, unaccompanied child)</label>
 					<br>
-					<input type="radio" id="by_geographic_area" name="organized_by" value="by_geographic_area"><label for="by_geographic_area"><strong>Geographic Area</strong> (sector or field office)</label>
-					<input type="radio" id="by_agency" name="organized_by" value="by_agency"><label for="by_agency"><strong>At Ports of Entry or Between Them</strong></label>
+					<label for="by_geographic_area"><input type="radio" id="by_geographic_area" name="organized_by" value="by_geographic_area"><strong>Geographic Area</strong> (sector or field office)</label>
+					<label for="by_agency"><input type="radio" id="by_agency" name="organized_by" value="by_agency"><strong>At Ports of Entry or Between Them</strong></label>
 					<br>
-					<input type="radio" id="by_state" name="organized_by" value="by_state"><label for="by_state"><strong>U.S. State</strong></label>
-					<input type="radio" id="by_title" name="organized_by" value="by_title"><label for="by_title"><strong>Title 8 or Title 42</strong></label>
+					<label for="by_state"><input type="radio" id="by_state" name="organized_by" value="by_state"><strong>U.S. State</strong></label>
+					<label for="by_title"><input type="radio" id="by_title" name="organized_by" value="by_title"><strong>Title 8 or Title 42</strong></label>
 					<br>
-					<input type="radio" id="by_nothing" name="organized_by" value="by_nothing"><label for="by_nothing"><strong>Nothing</strong> (just show a single row of totals)</label>
-				</p>
+					<label for="by_nothing"><input type="radio" id="by_nothing" name="organized_by" value="by_nothing"><strong>Nothing</strong> (just show a single row of totals)</label>
 			</fieldset>
 			
 			<p>
@@ -91,97 +108,15 @@
 				3. Optionally, have the table show only:
 			</h3>
 			
-			<fieldset>
-				<legend><strong>Border Patrol Sectors</strong></legend>
-					 <button type="button" onclick="selectCheck('bp_sectors[]')">Select All</button>
-					 <button type="button" onclick="deSelectCheck('bp_sectors[]')">Clear All</button><br><br>
-				<?php
-					$stmt = $pdo->prepare("SELECT DISTINCT area_of_responsibility FROM data WHERE land_border_region = 'Southwest Land Border' AND component = 'U.S. Border Patrol' ORDER BY area_of_responsibility ASC;");
-					$stmt->execute();
-					$result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-					foreach($result as $sector) {
-						echo "	<input type='checkbox' id='$sector[area_of_responsibility]' name='bp_sectors[]' value='$sector[area_of_responsibility]'><label for='$sector[area_of_responsibility]'>$sector[area_of_responsibility]</label>";
-					}
-				?>
-			</fieldset>
-			<br>
-			
-			<fieldset>
-				<legend><strong>CBP field offices</strong></legend>
-					 <button type="button" onclick="selectCheck('field_offices[]')">Select All</button>
-					 <button type="button" onclick="deSelectCheck('field_offices[]')">Clear All</button><br><br>
-				<?php
-					$stmt = $pdo->prepare("SELECT DISTINCT area_of_responsibility FROM data WHERE land_border_region = 'Southwest Land Border' AND component = 'Office of Field Operations' ORDER BY area_of_responsibility ASC;");
-					$stmt->execute();
-					$result = $stmt->fetchAll(\PDO::FETCH_ASSOC);					
-					foreach($result as $sector) {
-						echo "	<input type='checkbox' id='$sector[area_of_responsibility]' name='field_offices[]' value='$sector[area_of_responsibility]'><label for='$sector[area_of_responsibility]'>$sector[area_of_responsibility]</label>";
-					}
-				?>
-			</fieldset>
-			<br>
-			
-			<fieldset>
-				<legend><strong>Nationalities</strong></legend>
-					 <button type="button" onclick="selectCheck('nationalities[]')">Select All</button>
-					 <button type="button" onclick="deSelectCheck('nationalities[]')">Clear All</button><br><br>
-				<?php
-					$stmt = $pdo->prepare("SELECT DISTINCT citizenship FROM data WHERE land_border_region = 'Southwest Land Border' ORDER BY citizenship ASC;");
-					$stmt->execute();
-					$result = $stmt->fetchAll(\PDO::FETCH_ASSOC);							
-					foreach($result as $sector) {
-						$ucresult = fix_weird($sector["citizenship"]);
-						echo "	<input type='checkbox' id='$ucresult' name='nationalities[]' value='$sector[citizenship]'><label for='$ucresult'>$ucresult</label>";
-					}
-				?>
-			</fieldset>
-			<br>
-			
-			<fieldset>
-				<legend><strong>Demographic categories</strong></legend>
-					 <button type="button" onclick="selectCheck('demographics[]')">Select All</button>
-					 <button type="button" onclick="deSelectCheck('demographics[]')">Clear All</button><br><br>
-				<?php
-					$stmt = $pdo->prepare("SELECT DISTINCT demographic FROM data WHERE land_border_region = 'Southwest Land Border' ORDER BY demographic ASC;");
-					$stmt->execute();
-					$result = $stmt->fetchAll(\PDO::FETCH_ASSOC);						
-					foreach($result as $sector) {
-						$demo = fix_weird($sector["demographic"]);
-						echo "	<input type='checkbox' id='$demo' name='demographics[]' value='$sector[demographic]'><label for='$demo'>$demo</label>";
-					}
-				?>
-			</fieldset>
-			<br>
-			
-			<fieldset>
-					<legend><strong>States</strong></legend>
-					 <button type="button" onclick="selectCheck('states[]')">Select All</button>
-					 <button type="button" onclick="deSelectCheck('states[]')">Clear All</button><br><br>
-					<?php
-						$stmt = $pdo->prepare("SELECT DISTINCT state FROM data WHERE land_border_region = 'Southwest Land Border' ORDER BY state ASC;");
-						$stmt->execute();
-						$result = $stmt->fetchAll(\PDO::FETCH_ASSOC);						
-						foreach($result as $sector) {		
-							$state = fix_weird($sector["state"]);
-							echo "	<input type='checkbox' id='$state' name='states[]' value='$sector[state]'><label for='$state'>$state</label>";
-						}
-				?>
-			</fieldset>
-			<br>
-			
-			<fieldset>
-				<legend><strong>Title 8 or Title 42</strong></legend>
-					 <button type="button" onclick="selectCheck('titles[]')">Select All</button>
-					 <button type="button" onclick="deSelectCheck('titles[]')">Clear All</button><br><br>
-				<?php
-					$stmt = $pdo->prepare("SELECT DISTINCT title_of_authority FROM data WHERE land_border_region = 'Southwest Land Border' ORDER BY title_of_authority ASC;");
-					$stmt->execute();
-					$result = $stmt->fetchAll(\PDO::FETCH_ASSOC);				
-					foreach($result as $sector) {
-						echo "	<input type='checkbox' id='$sector[title_of_authority]' name='titles[]' value='$sector[title_of_authority]'><label for='$sector[title_of_authority]'>$sector[title_of_authority]</label>";
-					}
-				?>
-			</fieldset>
+			<?php
+				// The "makeFieldset()" function returns the HTML for each of the groups of optional checkboxes. It sends the text of the group's title, the checkboxes' "name" attribute (with brackets [] indicating that it will be read as an array), the MySQL credentials variable, the field of CBP's dataset to be queried to populate the group, and the MySQL text snippet indicating what the query should search for.
+				echo makeFieldset("Border Patrol Sectors", "bp_sectors[]", $pdo, "area_of_responsibility", " AND component = 'U.S. Border Patrol' ") . "<br>";
+				echo makeFieldset("CBP field offices", "field_offices[]", $pdo, "area_of_responsibility", " AND component = 'Office of Field Operations' ") . "<br>";
+				echo makeFieldset("Nationalities", "nationalities[]", $pdo, "citizenship", "") . "<br>";
+				echo makeFieldset("Demographic Categories", "demographics[]", $pdo, "demographic", "") . "<br>";
+				echo makeFieldset("States", "states[]", $pdo, "state", "") . "<br>";
+				echo makeFieldset("Title 8 or Title 42", "titles[]", $pdo, "title_of_authority", "");
+			?>
 			
 			<p>
 				<input type="submit" class="submitbutton" value="Show the Data"> <button type="button" onclick="clearForm()">Clear the Form</button>
@@ -195,6 +130,8 @@
 <?php
 
 function fix_weird($co) {
+	// Translates into plain English some of the jargon and abbreviations in CBP's database.
+
 	$co = ucwords(strtolower($co));
 	switch ($co) {
 		case "Other":
@@ -234,4 +171,23 @@ function fix_weird($co) {
 	return $co;
 }
 
+function makeFieldset($legend_text, $button_js, $pdo, $search_field, $additional_search) {
+	// Generates the HTML for the sets of checkboxes for the optional categories.
+	
+	$fieldset = "
+		<fieldset>
+			<legend><strong>$legend_text</strong>
+				<button type='button' onclick='selectCheck(\"$button_js\")'>Select All</button>
+				 <button type='button' onclick='deSelectCheck(\"$button_js\")'>Clear All</button></legend>	";
+		$stmt = $pdo->prepare("SELECT DISTINCT $search_field FROM data WHERE land_border_region = 'Southwest Land Border' $additional_search ORDER BY $search_field ASC;");
+		$stmt->execute();
+		$result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+		foreach($result as $sector) {
+			$ucresult = fix_weird($sector["$search_field"]);
+			$fieldset .= "	<label for='$sector[$search_field]'><input type='checkbox' id='$sector[$search_field]' name='$button_js' value='$sector[$search_field]'>$ucresult</label>";					
+		}
+		$fieldset .= "	</fieldset>";
+	return $fieldset;
+}
+			
 ?>
