@@ -73,8 +73,14 @@
 	if (isset($_GET["field_offices"]) && $_GET["field_offices"] != "") {
 		$field_offices = $_GET["field_offices"];
 		$title_field_offices = title_gen($field_offices, 4, "CBP Field Offices", "CBP", "at");
-		// Field offices should be "OR," not "AND," because they can be in addition to Border Patrol sectors
-		$query_where .= " OR (area_of_responsibility = '" . implode("' OR area_of_responsibility = '", $field_offices) . "') ";
+		// Field offices could be "OR" or "AND," depending on whether Border Patrol sectors were chosen
+		if (isset($bp_sectors) && $bp_sectors != "") {
+			$query_where .= " OR ";
+		}
+		else {
+			$query_where .= " AND ";
+		}
+		$query_where .= " ( area_of_responsibility = '" . implode("' OR area_of_responsibility = '", $field_offices) . "') ";
 		if (isset($_GET["bp_sectors"]) && $_GET["bp_sectors"] != "") {
 			$query_where .= ")";
 		}
@@ -183,7 +189,7 @@
 if ($organized_by_query_field != "nothing") {
 
 	$organized_by_array = array();
-		
+			
 	$organized_by_stmt = $pdo->query ("SELECT DISTINCT $organized_by_query_field FROM data WHERE land_border_region = 'Southwest Land Border' $query_where GROUP BY $organized_by_query_field HAVING SUM(encounter_count) > 0 ORDER BY SUM(encounter_count) DESC;");
 	
 	while ($row = $organized_by_stmt->fetch()) {
