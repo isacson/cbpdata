@@ -51,8 +51,8 @@
 						clist[i].checked = false;
 					}
 				}  
-				document.getElementById("months"). checked = true;
-				document.getElementById("years"). checked = false;
+				document.getElementById("months"). checked = false;
+				document.getElementById("years"). checked = true;
 				document.getElementById("by_nationality"). checked = true;
 				document.getElementById("by_demographic"). checked = false;
 				document.getElementById("by_geographic_area"). checked = false;
@@ -78,8 +78,8 @@
 
 				<fieldset>
 				<legend><strong>Show a table of migration data by</strong></legend>
-					<input type="radio" id="months" name="time_period" value="months" checked><label for="months">Month</label>
-					<input type="radio" id="years" name="time_period" value="years"><label for="years">Year</label>
+					<input type="radio" id="months" name="time_period" value="months"><label for="months">Month</label>
+					<input type="radio" id="years" name="time_period" value="years" checked><label for="years">Year</label>
 				</fieldset>
 			
 			<h3 style="color: #5BA8C8;">
