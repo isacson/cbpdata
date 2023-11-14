@@ -57,7 +57,7 @@
 				document.getElementById("by_demographic"). checked = false;
 				document.getElementById("by_geographic_area"). checked = false;
 				document.getElementById("by_agency"). checked = false;
-				document.getElementById("by_state"). checked = false;
+//				document.getElementById("by_state"). checked = false;
 				document.getElementById("by_title"). checked = false;
 				document.getElementById("by_nothing"). checked = false;				
 			}
@@ -94,7 +94,7 @@
 					<label for="by_geographic_area"><input type="radio" id="by_geographic_area" name="organized_by" value="by_geographic_area"><strong>Geographic Area</strong> (sector or field office)</label>
 					<label for="by_agency"><input type="radio" id="by_agency" name="organized_by" value="by_agency"><strong>At Ports of Entry or Between Them</strong></label>
 					<br>
-					<label for="by_state"><input type="radio" id="by_state" name="organized_by" value="by_state"><strong>U.S. State</strong></label>
+					<!-- <label for="by_state"><input type="radio" id="by_state" name="organized_by" value="by_state"><strong>U.S. State</strong></label> -->
 					<label for="by_title"><input type="radio" id="by_title" name="organized_by" value="by_title"><strong>Title 8 or Title 42</strong></label>
 					<br>
 					<label for="by_nothing"><input type="radio" id="by_nothing" name="organized_by" value="by_nothing"><strong>Nothing</strong> (just show a single row of totals)</label>
@@ -114,7 +114,7 @@
 				echo makeFieldset("CBP field offices", "field_offices[]", $pdo, "area_of_responsibility", " AND component = 'Office of Field Operations' ") . "<br>";
 				echo makeFieldset("Nationalities", "nationalities[]", $pdo, "citizenship", "") . "<br>";
 				echo makeFieldset("Demographic Categories", "demographics[]", $pdo, "demographic", "") . "<br>";
-				echo makeFieldset("States", "states[]", $pdo, "state", "") . "<br>";
+//				echo makeFieldset("States", "states[]", $pdo, "state", "") . "<br>";
 				echo makeFieldset("Title 8 or Title 42", "titles[]", $pdo, "title_of_authority", "");
 			?>
 			
