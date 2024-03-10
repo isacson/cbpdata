@@ -173,7 +173,7 @@
 	// Oh by the way, if the user selected a range of years that's different than the entire panoply of years, then the title text should specify that.
 	
 	if ($year1 > $firstyear OR $year2 < $lastyear) {
-		$title_text .= ", Between <span style='color: orange;'>$year1</span> and <span style='color: orange;'>$year2</span>";
+		$title_text .= " Between <span style='color: orange;'>$year1</span> and <span style='color: orange;'>$year2</span>";
 		$lastkey = array_key_last($years);
 		if ($year2 == $lastyear) {
 			$years[$lastkey] .= " (FYTD)";
@@ -200,6 +200,7 @@
 			body, table {font-family: "Avenir Next", Merriweather, Verdana; font-size: 90%;}
 			table, td, th {border: solid darkgray 1px;}
 			input {font-size: 60%; vertical-align: middle; margin-bottom: 0.333em;}
+			.not_a {color: inherit; text-decoration: none;} 
 		</style>
 		<!--Here's javascript for the "select table" button, which I grabbed from this StackOverflow response: https://stackoverflow.com/questions/2044616/select-a-complete-table-with-javascript-to-be-copied-to-clipboard-->
 		<script>
@@ -327,6 +328,17 @@ foreach ($items as $item) {
 	echo "<tr><td align='center'><strong>$co</strong></td>";
 
 if ($time_period == "months") {
+
+	$month_totals[] = "";
+
+	foreach($years as $year) {
+		if ($year == $lastyear) {
+			$year = $year . " (FYTD)";
+		}
+		foreach ($test_months as $month) {
+			$month_totals["$month$year"] = get_total_month($pdo, $year, $month, $query_where);
+		}
+	}
 	
 	foreach($years as $year) {
 	
@@ -343,14 +355,28 @@ if ($time_period == "months") {
 				// Call the query that gets the number of migrant encounter for that month and the chosen set of criteria
 				$amt = get_amount_month($pdo, $year, $month, $organized_by_query_field, $item, $query_where);
 				
+				// Fancy it up with a tooltip that shows the percentage for that month
+				$tot = $month_totals["$month$year"];
+				$num1 = floatval(str_replace(",", "", $amt));
+				$num2 = floatval(str_replace(",", "", $tot));
+				$pct = number_format(($num1 / $num2 * 100), 0) . "%";
+				
 				// Put the result in a table cell, right-aligned like numbers often are in spreadsheets
-				echo "<td align='right'>$amt</td>";
+				echo "<td align='right'><a class='not_a' href='#' title='$pct'>$amt</a></td>";
 			}
 		}	
 	}
 }
 
 if ($time_period == "years") {
+
+	$year_totals[] = "";
+	foreach ($years as $year) {
+		if ($year == $lastyear) {
+			$year = $year . " (FYTD)";
+		}
+		$year_totals["$year"] = get_total_year($pdo, $year, $query_where);
+	}
 
 	foreach($years as $year) {
 	
@@ -361,14 +387,26 @@ if ($time_period == "years") {
 // Run the function below that gets the number for that organized_by thing and year. Put it in the corresponding table cell.
 			$amt = get_amount_year($pdo, $year, $organized_by_query_field, $item, $query_where);
 		
-				echo "<td align='right'>$amt</td>";
+			// Fancy it up with a tooltip that shows the percentage for that month
+			$tot = $year_totals["$year"];
+			$num1 = floatval(str_replace(",", "", $amt));
+			$num2 = floatval(str_replace(",", "", $tot));
+			$pct = number_format(($num1 / $num2 * 100), 0) . "%";
+			
+			// Put the result in a table cell, right-aligned like numbers often are in spreadsheets
+			echo "<td align='right'><a class='not_a' href='#' title='$pct'>$amt</a></td>";
 	}
 }
 
 // The last column is the all-time total for that organized_by thing, so send it to a function that queries the dataset for that thing without specifying any months or years.
 $amt = get_total_item($pdo, $organized_by_query_field, $item, $query_where);
-
-				echo "<td align='right'><strong>$amt</strong></td>";
+$full_total = get_total($pdo, $query_where);
+$num1 = floatval(str_replace(",", "", $amt));
+$num2 = floatval(str_replace(",", "", $full_total));
+$pct = number_format(($num1 / $num2 * 100), 0) . "%";
+			
+			// Put the result in a table cell, right-aligned like numbers often are in spreadsheets
+			echo "<td align='right'><strong><a class='not_a' href='#' title='$pct'>$amt</a></strong></td>";
 
 }
 	echo "</tr>";
@@ -391,7 +429,7 @@ if ($time_period == "months") {
 // Run the function below that gets the number for all migrant encounters that month (if the user chose monthly data) that meet the chosen criteria. Put it in the corresponding table cell.
 			$test_bad_month = $year . " " . $month;
 			if (!in_array($test_bad_month, $badmonths)) {
-				$amt = get_total_month($pdo, $year, $month, $query_where);
+				$amt = $month_totals["$month$year"];
 		
 				echo "<td align='right'><strong>$amt</strong></td>";
 			}
@@ -408,16 +446,15 @@ if ($time_period == "years") {
 		}
 
 // Run the function below that gets the number for all migrant encounters that year (if the user chose yearly data) that meet the chosen criteria. Put it in the corresponding table cell.
-			$amt = get_total_year($pdo, $year, $query_where);
+			$amt = $year_totals["$year"];
 		
 				echo "<td align='right'><strong>$amt</strong></td>";
 	}
 }
 
 // The bottom right cell is the overall total of every migrant encounter that met the chosen criteria since FY 2020. Let's run the function that queries the dataset for that.
-$amt = get_total($pdo, $query_where);
 
-				echo "<td align='right'><strong>$amt</strong></td>";
+				echo "<td align='right'><strong>$full_total</strong></td>";
 
 echo "</tr>";
 
