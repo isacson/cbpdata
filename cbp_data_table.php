@@ -134,6 +134,53 @@
 	if (isset ($title_titles)) {
 		$title_text .= $title_titles;
 	}
+	
+	// Let's grab the fiscal years that show any data, and order them from earliest to latest
+	$years_stmt = $pdo->query ("SELECT DISTINCT fiscal_year FROM data WHERE land_border_region = 'Southwest Land Border' $query_where GROUP BY fiscal_year HAVING SUM(encounter_count) > 0 ORDER BY fiscal_year ASC;");
+	
+	while ($row = $years_stmt->fetch()) {
+		$years[] = $row["fiscal_year"];
+	}
+	
+	// This function gets rid of CBP's " (FYTD)" notation from the "year"
+	
+	$removeFYTD = function($text) {
+		return str_replace(' (FYTD)', '', $text);
+	};
+	
+	$years = array_map($removeFYTD, $years);
+	
+	// Let's create a variable to remind us what the latest year in the array is (the one that will need " (FYTD)" attached to it in searches of CBP's data)
+	
+	$firstyear = min($years);
+	$lastyear = max($years);
+	
+	// Let's make an array of only the years that the user selected
+	
+	$year1 = $_GET["year1"];
+	$year2 = $_GET["year2"];
+	
+	if ($year1 > $year2) {
+		// Swap values if $int1 is greater
+		$temp = $year1;
+		$year1 = $year2;
+		$year2 = $temp;
+	}
+	
+	// Create an array of integers from $int1 to $int2
+	$years = range($year1, $year2);
+	
+	// Oh by the way, if the user selected a range of years that's different than the entire panoply of years, then the title text should specify that.
+	
+	if ($year1 > $firstyear OR $year2 < $lastyear) {
+		$title_text .= ", Between <span style='color: orange;'>$year1</span> and <span style='color: orange;'>$year2</span>";
+		$lastkey = array_key_last($years);
+		if ($year2 == $lastyear) {
+			$years[$lastkey] .= " (FYTD)";
+		}
+		$query_where .= " AND (fiscal_year = '" . implode("' OR fiscal_year = '", $years) . "') ";
+		$years = array_map($removeFYTD, $years);
+	}
 
 // Variables are now grabbed. Title text is ready to show. Let's render the web page.
 
@@ -210,13 +257,6 @@ echo "<table id='theTable'>";
 // What the first column shows, like "Border Patrol Sectors"
 echo "<tr><th>$title_organized_by</th>";
 
-// Let's grab the fiscal years that show any data, and order them from earliest to latest
-	$years_stmt = $pdo->query ("SELECT DISTINCT fiscal_year FROM data WHERE land_border_region = 'Southwest Land Border' $query_where GROUP BY fiscal_year HAVING SUM(encounter_count) > 0 ORDER BY fiscal_year ASC;");
-	
-	while ($row = $years_stmt->fetch()) {
-		$years[] = $row["fiscal_year"];
-	}
-
 // Make an array of months using the abbreviations that CBP uses in its dataset
 if ($time_period == "months")  {
 	$test_months = array("OCT", "NOV", "DEC", "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP");
@@ -226,32 +266,41 @@ if ($time_period == "months")  {
 $badmonths = array();
 
 // Let's generate the rest of the first row. Years if the user chose "by year," and months and years if the user chose "by month."
+
 foreach($years as $year) {
 
-	// Get rid of CBP's "FYTD" notation for the current fiscal year, it's not useful
-	$yr = str_replace(" (FYTD)", "", $year);
-	
 	if ($time_period == "years") {
 	
 	// Put a year in each table header cell:
-		echo "<th>$yr</th>";
+		echo "<th>$year</th>";
 	}
 
 	if ($time_period == "months")  {
 		foreach ($test_months as $monthkey=>$month) {
 
 			// Call the function below that queries the database for months and years where the result is not "zero" migrant encounters
-			$mo = test_month($pdo, $year, $month);
+
+			// First, restore the "FYTD" if it's the current year, so it shows up in searches. 
+			// Here, a new variable $yr is the "ugly" current year for the query. $year remains the "pretty" year that's just the 4 digits.
+	
+			$query_year = $year;
+
+			if ($year == $lastyear) {
+				$query_year = $year . " (FYTD)";
+			}
+
+			// Then, run the query
+			$mo = test_month($pdo, $query_year, $month);
 
 	// October, November, and December of the current fiscal year are actually in the previous calendar year, so subtract 1 year for those months:	
 		if ($mo == "Oct") {
-			$yr = $yr-1;
+			$yr = $year-1;
 			}
 		// Then add one when you get to January, so it knows that the calendar year changed
 		if ($mo == "Jan") {
 			$yr = $yr+1;
 		}
-			
+
 			// Put the month and year in the table header cell:
 			if ($mo != "none") {
 				echo "<th>$mo $yr</th>";
@@ -259,7 +308,7 @@ foreach($years as $year) {
 
 // If that month has no data—the test_month function didn't send back "none"—add it to the "$badmonths" array and don't generate a header cell / table column for it.
 			else {
-				$badmonths[] = $year . " " . $month;
+				$badmonths[] = $query_year . " " . $month;
 			}
 		}
 	}
@@ -280,6 +329,10 @@ foreach ($items as $item) {
 if ($time_period == "months") {
 	
 	foreach($years as $year) {
+	
+		if ($year == $lastyear) {
+			$year = $year . " (FYTD)";
+		}
 
 		foreach ($test_months as $month) {
 	
@@ -301,6 +354,10 @@ if ($time_period == "years") {
 
 	foreach($years as $year) {
 	
+		if ($year == $lastyear) {
+			$year = $year . " (FYTD)";
+		}
+
 // Run the function below that gets the number for that organized_by thing and year. Put it in the corresponding table cell.
 			$amt = get_amount_year($pdo, $year, $organized_by_query_field, $item, $query_where);
 		
@@ -325,6 +382,10 @@ if ($time_period == "months") {
 	
 	foreach($years as $year) {
 
+		if ($year == $lastyear) {
+			$year = $year . " (FYTD)";
+		}
+
 		foreach ($test_months as $month) {
 	
 // Run the function below that gets the number for all migrant encounters that month (if the user chose monthly data) that meet the chosen criteria. Put it in the corresponding table cell.
@@ -342,6 +403,10 @@ if ($time_period == "years") {
 
 	foreach($years as $year) {
 	
+		if ($year == $lastyear) {
+			$year = $year . " (FYTD)";
+		}
+
 // Run the function below that gets the number for all migrant encounters that year (if the user chose yearly data) that meet the chosen criteria. Put it in the corresponding table cell.
 			$amt = get_total_year($pdo, $year, $query_where);
 		
@@ -519,6 +584,5 @@ function get_total($pdo, $query_where) {
 		
 return number_format($amt[0],0,".",",");
 }
-
 
 ?>

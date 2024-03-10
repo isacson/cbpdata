@@ -59,7 +59,9 @@
 				document.getElementById("by_agency"). checked = false;
 //				document.getElementById("by_state"). checked = false;
 				document.getElementById("by_title"). checked = false;
-				document.getElementById("by_nothing"). checked = false;				
+				document.getElementById("by_nothing"). checked = false;
+				document.getElementById("year1").selectedIndex = 0;	
+				document.getElementById("year2").selectedIndex = 0;	
 			}
 			
         </script>
@@ -80,6 +82,42 @@
 				<legend><strong>Show a table of migration data by</strong></legend>
 					<input type="radio" id="months" name="time_period" value="months"><label for="months">Month</label>
 					<input type="radio" id="years" name="time_period" value="years" checked><label for="years">Year</label>
+					&nbsp;&nbsp;&nbsp; (Optional: show only the years
+					<select name="year1" id="year1">
+					<?php					
+						// Let's grab the fiscal years that show any data, and order them from earliest to latest
+						$years_stmt = $pdo->query ("SELECT DISTINCT fiscal_year FROM data WHERE land_border_region = 'Southwest Land Border' GROUP BY fiscal_year HAVING SUM(encounter_count) > 0 ORDER BY fiscal_year ASC;");
+						
+						while ($row = $years_stmt->fetch()) {
+							$years[] = $row["fiscal_year"];
+						}
+						
+						// This function gets rid of CBP's " (FYTD)" notation from the "year"
+						
+						$removeFYTD = function($text) {
+							return str_replace(' (FYTD)', '', $text);
+						};
+						
+						$years = array_map($removeFYTD, $years);
+		
+						foreach($years as $year) {
+						
+							echo "<option value='$year'>$year</option>";
+						}					
+					?>
+					</select>
+					through
+					<select name="year2" id="year2">
+					<?php
+					rsort($years);
+					
+					foreach($years as $year) {
+				
+					echo "<option value='$year'>$year</option>";
+					}				
+					?>
+					</select>
+					)
 				</fieldset>
 			
 			<h3 style="color: #5BA8C8;">
