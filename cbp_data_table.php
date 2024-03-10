@@ -531,8 +531,8 @@ function get_amount_month($pdo, $year, $month, $organized_by_query_field, $item,
 	$stmt = $pdo->prepare("SELECT SUM(encounter_count) FROM `data` WHERE $organized_by_query_field = '$item' AND land_border_region = 'Southwest Land Border' $query_where AND fiscal_year = :year AND month_abbv = :month;");
 	$stmt->execute(['year' => $year, 'month' => $month]); 
 	$amt = $stmt->fetch();
-		
-return number_format($amt[0],0,".",",");
+	
+return number_format($amt[0] ?? 0,0,".",",");
 }
 
 // If the user chose "by year," this query gets the total number of migrant encounters for that year and organized_by thing, meeting the criteria that the user chose.
@@ -551,7 +551,7 @@ function get_total_item($pdo, $organized_by_query_field, $item, $query_where) {
 	$stmt = $pdo->prepare("SELECT SUM(encounter_count) FROM `data` WHERE $organized_by_query_field = '$item' AND land_border_region = 'Southwest Land Border' $query_where ");
 	$stmt->execute(); 
 	$amt = $stmt->fetch();
-		
+	
 return number_format($amt[0],0,".",",");
 }
 
