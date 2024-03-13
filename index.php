@@ -25,7 +25,8 @@
 			}
 			.footer-github {
 				font-size: 80%;
-				text-align: right;
+				text-align: center;
+				width: 80%;
 			}
 		</style>
 

@@ -201,7 +201,7 @@
 			table, td, th {border: solid darkgray 1px;}
 			input {font-size: 60%; vertical-align: middle; margin-bottom: 0.333em;}
 			.not_a {color: inherit; text-decoration: none;} 
-			.footer-github {text-align:right; font-size: 80%;}
+			.footer-github {text-align:center; width: 80%; font-size: 80%;}
 		</style>
 		<!--Here's javascript for the "select table" button, which I grabbed from this StackOverflow response: https://stackoverflow.com/questions/2044616/select-a-complete-table-with-javascript-to-be-copied-to-clipboard-->
 		<script>
