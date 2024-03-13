@@ -1,4 +1,4 @@
-<?php require_once 'functions.php'; ?>
+<?php require_once 'functions.php';?>
 
 <html>
 	<head>
@@ -22,6 +22,10 @@
 			}
 			label {
 				white-space:nowrap;
+			}
+			.footer-github {
+				font-size: 80%;
+				text-align: right;
 			}
 		</style>
 
@@ -161,6 +165,8 @@
 			</p>	
 			
 		</form>
+		
+		<?php require_once 'footer.php'; ?>
 		
 	</body>
 </html>

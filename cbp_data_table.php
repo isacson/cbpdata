@@ -201,6 +201,7 @@
 			table, td, th {border: solid darkgray 1px;}
 			input {font-size: 60%; vertical-align: middle; margin-bottom: 0.333em;}
 			.not_a {color: inherit; text-decoration: none;} 
+			.footer-github {text-align:right; font-size: 80%;}
 		</style>
 		<!--Here's javascript for the "select table" button, which I grabbed from this StackOverflow response: https://stackoverflow.com/questions/2044616/select-a-complete-table-with-javascript-to-be-copied-to-clipboard-->
 		<script>
@@ -429,7 +430,12 @@ if ($time_period == "months") {
 // Run the function below that gets the number for all migrant encounters that month (if the user chose monthly data) that meet the chosen criteria. Put it in the corresponding table cell.
 			$test_bad_month = $year . " " . $month;
 			if (!in_array($test_bad_month, $badmonths)) {
-				$amt = $month_totals["$month$year"];
+				if ($organized_by_query_field != "nothing") {
+					$amt = $month_totals["$month$year"];
+				}
+				else {
+					$amt = get_total_month($pdo, $year, $month, $query_where);
+				}
 		
 				echo "<td align='right'><strong>$amt</strong></td>";
 			}
@@ -446,7 +452,12 @@ if ($time_period == "years") {
 		}
 
 // Run the function below that gets the number for all migrant encounters that year (if the user chose yearly data) that meet the chosen criteria. Put it in the corresponding table cell.
-			$amt = $year_totals["$year"];
+				if ($organized_by_query_field != "nothing") {
+					$amt = $year_totals["$year"];
+				}
+				else {
+					$amt = get_total_year($pdo, $year, $query_where);
+				}
 		
 				echo "<td align='right'><strong>$amt</strong></td>";
 	}
@@ -454,7 +465,13 @@ if ($time_period == "years") {
 
 // The bottom right cell is the overall total of every migrant encounter that met the chosen criteria since FY 2020. Let's run the function that queries the dataset for that.
 
-				echo "<td align='right'><strong>$full_total</strong></td>";
+				if ($organized_by_query_field != "nothing") {
+					echo "<td align='right'><strong>$full_total</strong></td>";
+				}
+				else {
+					$full_total = get_total($pdo, $query_where);
+					echo "<td align='right'><strong>$full_total</strong></td>";
+				}
 
 echo "</tr>";
 
@@ -462,8 +479,9 @@ echo "</tr>";
 ?>
 		</table>
 		<p>
-			<a href="/cbpdata/">Back to the search form</a>
+			<a href="/">Back to the search form</a>
 		</p>
+		<?php require_once 'footer.php'; ?>
 	</body>
 </html>
 

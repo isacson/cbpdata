@@ -2,6 +2,9 @@
 
 // IMPORTANT! RENAME OR COPY THIS FILE AS "functions.php" THEN ADD YOUR PERSONAL USERNAME, PASSWORD, ETC. TO IT. THIS IS A DUMMY FILE TO SHARE ON GITHUB, WITH NO PRIVATE INFORMATION IN IT.
 
+ini_set('session.cache_limiter','public');
+session_cache_limiter(false);
+
 if (!isset($thispath)) {
 	ob_start();
 	session_start();
