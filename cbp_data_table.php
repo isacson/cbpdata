@@ -153,8 +153,12 @@
 	// Let's create a variable to remind us what the latest year in the array is (the one that will need " (FYTD)" attached to it in searches of CBP's data)
 	
 	$firstyear = min($years);
-	$lastyear = max($years);
-	
+	if (isset ($title_titles)) {
+		$lastyear = date("Y");
+	}
+	else {
+		$lastyear = max($years);
+	}	
 	// Let's make an array of only the years that the user selected
 	
 	$year1 = $_GET["year1"];
@@ -359,7 +363,12 @@ if ($time_period == "months") {
 				$tot = $month_totals["$month$year"];
 				$num1 = floatval(str_replace(",", "", $amt));
 				$num2 = floatval(str_replace(",", "", $tot));
-				$pct = number_format(($num1 / $num2 * 100), 0) . "%";
+				if ($num2 != 0) {
+					$pct = number_format(($num1 / $num2 * 100), 0) . "%";
+				}
+				else {
+					$pct = "∞";
+				}
 				
 				// Put the result in a table cell, right-aligned like numbers often are in spreadsheets
 				echo "<td align='right' title='$pct'>$amt</td>";
@@ -391,7 +400,12 @@ if ($time_period == "years") {
 			$tot = $year_totals["$year"];
 			$num1 = floatval(str_replace(",", "", $amt));
 			$num2 = floatval(str_replace(",", "", $tot));
-			$pct = number_format(($num1 / $num2 * 100), 0) . "%";
+			if ($num2 != 0) {
+				$pct = number_format(($num1 / $num2 * 100), 0) . "%";
+			}
+			else {
+				$pct = "∞";
+			}
 			
 			// Put the result in a table cell, right-aligned like numbers often are in spreadsheets
 			echo "<td align='right' title='$pct'>$amt</td>";
@@ -403,7 +417,12 @@ $amt = get_total_item($pdo, $organized_by_query_field, $item, $query_where);
 $full_total = get_total($pdo, $query_where);
 $num1 = floatval(str_replace(",", "", $amt));
 $num2 = floatval(str_replace(",", "", $full_total));
-$pct = number_format(($num1 / $num2 * 100), 0) . "%";
+if ($num2 != 0) {
+	$pct = number_format(($num1 / $num2 * 100), 0) . "%";
+}
+else {
+	$pct = "∞";
+}
 			
 			// Put the result in a table cell, right-aligned like numbers often are in spreadsheets
 			echo "<td align='right'  title='$pct'><strong>$amt</strong></td>";
