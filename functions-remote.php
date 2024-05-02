@@ -12,8 +12,8 @@ if (!isset($thispath)) {
 
 	//database credentials
 	define('DBHOST','localhost');
-	define('DBUSER','adamisac');
-	define('DBPASS','krRTzDLRN*VX-B8wRx6euyZ2DjnM.');
+	define('DBUSER','root');
+	define('DBPASS','root.');
 	define('DBNAME','adamisac_cbpdata');
 
 	//application address
