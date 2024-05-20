@@ -159,6 +159,7 @@
 	else {
 		$lastyear = max($years);
 	}	
+	
 	// Let's make an array of only the years that the user selected
 	
 	$year1 = $_GET["year1"];
@@ -205,6 +206,10 @@
 			table, td, th {border: solid darkgray 1px;}
 			input {font-size: 60%; vertical-align: middle; margin-bottom: 0.333em;}
 			.footer-github {text-align:center; width: 80%; font-size: 80%;}
+			th {cursor: pointer;}
+			.sort-asc::after {content: " ▲";}
+      .sort-desc::after {content: " ▼";}
+
 		</style>
 		<!--Here's javascript for the "select table" button, which I grabbed from this StackOverflow response: https://stackoverflow.com/questions/2044616/select-a-complete-table-with-javascript-to-be-copied-to-clipboard-->
 		<script>
@@ -227,6 +232,53 @@
 					range.select();
 				}
 			}
+			
+			document.addEventListener('DOMContentLoaded', function() {
+					const table = document.getElementById('theTable');
+					const headers = table.querySelectorAll('th');
+					let isAscending = false;
+					let currentSortedColumnIndex = -1;
+	
+					headers.forEach((header, index) => {
+							header.addEventListener('click', () => {
+									if (currentSortedColumnIndex !== index) {
+											isAscending = false; // Descending sort order first
+									} else {
+											isAscending = !isAscending; // Toggle sort order
+									}
+									currentSortedColumnIndex = index;
+									sortTable(index);
+							});
+					});
+	
+					function sortTable(columnIndex) {
+							const rows = Array.from(table.rows).slice(1, -1); // Exclude header and totals row
+							const totalsRow = table.rows[table.rows.length - 1];
+	
+							rows.sort((rowA, rowB) => {
+									const cellA = rowA.cells[columnIndex].innerText.replace(/,/g, '');
+									const cellB = rowB.cells[columnIndex].innerText.replace(/,/g, '');
+									const a = isNaN(cellA) ? cellA : parseFloat(cellA);
+									const b = isNaN(cellB) ? cellB : parseFloat(cellB);
+	
+									return (a > b ? 1 : -1) * (isAscending ? 1 : -1);
+							});
+	
+							rows.forEach(row => table.tBodies[0].appendChild(row));
+							table.tBodies[0].appendChild(totalsRow); // Re-append totals row to keep it at the bottom
+	
+							updateHeaderIndicator(columnIndex);
+					}
+	
+					function updateHeaderIndicator(columnIndex) {
+							headers.forEach((header, index) => {
+									header.classList.remove('sort-asc', 'sort-desc');
+									if (index === columnIndex) {
+											header.classList.add(isAscending ? 'sort-asc' : 'sort-desc');
+									}
+							});
+					}
+			});
 		</script>
 	</head>
 	<body>
