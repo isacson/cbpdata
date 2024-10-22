@@ -142,13 +142,21 @@
 		$years[] = $row["fiscal_year"];
 	}
 	
+	
+	$fytd_test = "no";
+	if (in_array("FYTD", $years)) {
+		$fytd_test = "yes";
+	}
+	
 	// This function gets rid of CBP's " (FYTD)" notation from the "year"
 	
 	$removeFYTD = function($text) {
 		return str_replace(' (FYTD)', '', $text);
 	};
 	
-	$years = array_map($removeFYTD, $years);
+	if ($fytd_test == "yes") {
+		$years = array_map($removeFYTD, $years);
+	}
 	
 	// Let's create a variable to remind us what the latest year in the array is (the one that will need " (FYTD)" attached to it in searches of CBP's data)
 	
@@ -180,7 +188,7 @@
 	if ($year1 > $firstyear OR $year2 < $lastyear) {
 		$title_text .= " Between <span style='color: orange;'>$year1</span> and <span style='color: orange;'>$year2</span>";
 		$lastkey = array_key_last($years);
-		if ($year2 == $lastyear) {
+		if ($year2 == $lastyear && $fytd_test == "yes") {
 			$years[$lastkey] .= " (FYTD)";
 		}
 		$query_where .= " AND (fiscal_year = '" . implode("' OR fiscal_year = '", $years) . "') ";
@@ -342,7 +350,7 @@ foreach($years as $year) {
 	
 			$query_year = $year;
 
-			if ($year == $lastyear) {
+			if ($year == $lastyear && $fytd_test == "yes") {
 				$query_year = $year . " (FYTD)";
 			}
 
@@ -388,7 +396,7 @@ if ($time_period == "months") {
 	$month_totals[] = "";
 
 	foreach($years as $year) {
-		if ($year == $lastyear) {
+		if ($year == $lastyear && $fytd_test == "yes") {
 			$year = $year . " (FYTD)";
 		}
 		foreach ($test_months as $month) {
@@ -398,7 +406,7 @@ if ($time_period == "months") {
 	
 	foreach($years as $year) {
 	
-		if ($year == $lastyear) {
+		if ($year == $lastyear && $fytd_test == "yes") {
 			$year = $year . " (FYTD)";
 		}
 
@@ -433,7 +441,7 @@ if ($time_period == "years") {
 
 	$year_totals[] = "";
 	foreach ($years as $year) {
-		if ($year == $lastyear) {
+		if ($year == $lastyear && $fytd_test == "yes") {
 			$year = $year . " (FYTD)";
 		}
 		$year_totals["$year"] = get_total_year($pdo, $year, $query_where);
@@ -441,7 +449,7 @@ if ($time_period == "years") {
 
 	foreach($years as $year) {
 	
-		if ($year == $lastyear) {
+		if ($year == $lastyear && $fytd_test == "yes") {
 			$year = $year . " (FYTD)";
 		}
 
@@ -491,7 +499,7 @@ if ($time_period == "months") {
 	
 	foreach($years as $year) {
 
-		if ($year == $lastyear) {
+		if ($year == $lastyear && $fytd_test == "yes") {
 			$year = $year . " (FYTD)";
 		}
 
@@ -517,7 +525,7 @@ if ($time_period == "years") {
 
 	foreach($years as $year) {
 	
-		if ($year == $lastyear) {
+		if ($year == $lastyear && $fytd_test == "yes") {
 			$year = $year . " (FYTD)";
 		}
 
