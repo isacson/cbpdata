@@ -141,10 +141,18 @@
 	while ($row = $years_stmt->fetch()) {
 		$years[] = $row["fiscal_year"];
 	}
-	
-	
+
 	$fytd_test = "no";
-	if (in_array("FYTD", $years)) {
+
+function stringInArray($needle, $haystack) {
+    return count(array_filter($haystack, function ($item) use ($needle) {
+        return strpos($item, $needle) !== false;
+    })) > 0;
+}
+
+$is_fytd = stringInArray("FYTD", $years);
+
+	if ($is_fytd) {
 		$fytd_test = "yes";
 	}
 	
