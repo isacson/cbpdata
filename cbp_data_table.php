@@ -2,6 +2,28 @@
 
 // This page shows a table of U.S.-Mexico border-specific results from CBP's dataset of migration data dating back to fiscal year 2020. It serves data based on criteria chosen at the index.php page in this same folder.
 
+/* CBP changed their notation from "UC / Single Minors" to "UAC". Let's get rid of "UAC" in the dataset where it appears, so that we're searching for the same thing. */
+
+try {
+    // Connect to the database using PDO
+
+    // Step 1: Check if "UAC" exists in the demographic column
+    $checkQuery = "SELECT COUNT(*) FROM data WHERE demographic = 'UAC'";
+    $stmt = $pdo->prepare($checkQuery);
+    $stmt->execute();
+    $count = $stmt->fetchColumn();
+
+    // Step 2: If "UAC" exists, update it to "UC / Single Minors"
+    if ($count > 0) {
+        $updateQuery = "UPDATE data SET demographic = 'UC / Single Minors' WHERE demographic = 'UAC'";
+        $updateStmt = $pdo->prepare($updateQuery);
+        $updateStmt->execute();
+    }
+} catch (PDOException $e) {
+    // Handle potential errors gracefully
+    error_log("Database error: " . $e->getMessage());
+}
+
 // Let's grab the variables that index.php sent over:
 
 // Should the table columns be years or months? 

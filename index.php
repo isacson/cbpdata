@@ -1,4 +1,27 @@
-<?php require_once 'functions.php';?>
+<?php require_once 'functions.php';
+
+/* CBP changed their notation from "UC / Single Minors" to "UAC". Let's get rid of "UAC" in the dataset where it appears, so that we're searching for the same thing. */
+
+try {
+    // Connect to the database using PDO
+
+    // Step 1: Check if "UAC" exists in the demographic column
+    $checkQuery = "SELECT COUNT(*) FROM data WHERE demographic = 'UAC'";
+    $stmt = $pdo->prepare($checkQuery);
+    $stmt->execute();
+    $count = $stmt->fetchColumn();
+
+    // Step 2: If "UAC" exists, update it to "UC / Single Minors"
+    if ($count > 0) {
+        $updateQuery = "UPDATE data SET demographic = 'UC / Single Minors' WHERE demographic = 'UAC'";
+        $updateStmt = $pdo->prepare($updateQuery);
+        $updateStmt->execute();
+    }
+} catch (PDOException $e) {
+    // Handle potential errors gracefully
+    error_log("Database error: " . $e->getMessage());
+}
+?>
 
 <html>
 	<head>
@@ -70,6 +93,7 @@
 			}
 			
         </script>
+        <script defer data-domain="cbpdata.adamisacson.com" src="https://plausible.io/js/script.js"></script>
 	</head>
 	<body>
 		<h2 style="color:white; background-color: #797979; width: 80%; padding: 0 15px 0 15px;" align="center">
